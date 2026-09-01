@@ -16,6 +16,11 @@ may discover compatibility, render connector configuration, and check service
 health, but it does not own Mooncake's internal storage/transport lifecycle or
 delete KV data.
 
+The fork does not operate self-hosted GitHub runners. Automated portable tests
+use GitHub-hosted runners. Ascend/NPU acceptance runs on demand on separately
+operated hosts and is recorded as external evidence rather than requiring a
+permanent Actions runner.
+
 ## Synchronizing upstream
 
 ```bash
