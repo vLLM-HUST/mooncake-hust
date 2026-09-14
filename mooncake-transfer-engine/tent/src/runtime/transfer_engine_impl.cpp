@@ -94,6 +94,8 @@ struct PreservedTentConfigOverrides {
     std::optional<std::string> local_segment_name;
     std::optional<std::string> rpc_server_hostname;
     std::optional<json> rpc_server_port;
+    bool force_tcp{false};
+    std::optional<std::vector<std::string>> rdma_whitelist;
 };
 
 template <typename T>
@@ -215,8 +217,11 @@ PreservedTentConfigOverrides captureExplicitTransferEngineConfig(
         captureExplicitConfigValue(config, "local_segment_name", std::string());
     preserved.rpc_server_hostname = captureExplicitConfigValue(
         config, "rpc_server_hostname", std::string());
+    preserved.force_tcp = config.get("transports/force_tcp", false);
     preserved.rpc_server_port =
         captureExplicitConfigValue(config, "rpc_server_port", json());
+    preserved.rdma_whitelist = captureExplicitConfigValue(
+        config, "topology/rdma_whitelist", std::vector<std::string>());
     return preserved;
 }
 
@@ -240,6 +245,11 @@ void restoreExplicitTransferEngineConfig(
                                preserved.rpc_server_hostname);
     restoreExplicitConfigValue(config, "rpc_server_port",
                                preserved.rpc_server_port);
+    if (preserved.force_tcp) {
+        ConfigHelper::forceTcp(config);
+    }
+    restoreExplicitConfigValue(config, "topology/rdma_whitelist",
+                               preserved.rdma_whitelist);
 }
 
 TransferEngineImpl::TransferEngineImpl()
@@ -1347,6 +1357,7 @@ static MemoryType getTypeEnum(const std::string& type) {
     if (type == "npu") return MTYPE_CUDA;
     if (isAmdGpuLocationType(type)) return MTYPE_ROCM;
     if (type == "tpu") return MTYPE_TPU;
+    if (type == "xpu") return MTYPE_XPU;
     return MTYPE_UNKNOWN;
 }
 
@@ -1385,7 +1396,8 @@ SelectionResult TransferEngineImpl::getTransportType(const Request& request,
     const TransportType hint = request.transport_hint;
 
     // Legacy mode: use original logic (before TransportSelector)
-    if (transport_selector_ && transport_selector_->isLegacyMode()) {
+    if (transport_selector_ && transport_selector_->isLegacyMode() &&
+        !transport_selector_->isForceTcp()) {
         SelectionResult result;
         std::vector<TransportType> raw;
         if (desc->type == SegmentType::File) {
