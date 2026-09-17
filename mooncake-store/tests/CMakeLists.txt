@@ -160,6 +160,15 @@ add_store_test(master_admin_server_test master_admin_server_test.cpp)
 add_store_test(posix_file_test posix_file_test.cpp)
 add_store_test(thread_pool_test thread_pool_test.cpp)
 add_store_test(transfer_task_test transfer_task_test.cpp)
+if(USE_TENT)
+  add_test(
+    NAME transfer_task_tent_completion_test
+    COMMAND transfer_task_test
+            --gtest_filter=TransferTaskTest.RemoteTransferWaitCompletesCorrectly
+  )
+  set_tests_properties(transfer_task_tent_completion_test
+                       PROPERTIES ENVIRONMENT "MC_USE_TENT=1" TIMEOUT 30)
+endif()
 add_store_test(transfer_submitter_config_test
                transfer_submitter_config_test.cpp)
 find_package(CUDAToolkit QUIET)
@@ -216,6 +225,8 @@ endif()
 add_store_test(ipv6_client_test ipv6_client_test.cpp)
 add_store_test(host_port_fix_test host_port_fix_test.cpp)
 add_store_test(client_metrics_test client_metrics_test.cpp)
+add_store_test(client_host_identity_config_test
+               client_host_identity_config_test.cpp)
 add_store_test(client_metric_config_test client_metric_config_test.cpp)
 add_store_test(ssd_metrics_test ssd_metrics_test.cpp)
 add_store_test(serializer_test serializer_test.cpp)
@@ -241,6 +252,7 @@ add_store_test(
 add_store_test(zstd_util_test zstd_util_test.cpp)
 add_store_test(local_file_snapshot_config_test
                local_file_snapshot_config_test.cpp)
+add_store_test(s3_client_config_test s3_client_config_test.cpp)
 add_store_test(
   local_file_snapshot_object_store_test
   ha/snapshot/object/backends/local/local_file_snapshot_object_store_test.cpp)
@@ -259,6 +271,8 @@ add_ha_test(batch_oplog_snapshot_provider_test
             ha/snapshot/batch_oplog/provider_test.cpp)
 add_ha_test(batch_oplog_snapshot_publisher_test
             ha/snapshot/batch_oplog/publisher_test.cpp)
+add_ha_test(batch_oplog_pruning_coordinator_test
+            ha/snapshot/batch_oplog/pruning_coordinator_test.cpp)
 add_ha_test(batch_oplog_snapshot_gc_test ha/snapshot/batch_oplog/gc_test.cpp)
 add_ha_test(batch_oplog_snapshot_coordinator_test
             ha/snapshot/batch_oplog/coordinator_test.cpp)
@@ -270,6 +284,8 @@ add_store_test(master_service_test_for_snapshot
                ha/snapshot/master_service_test_for_snapshot.cpp)
 add_store_test(non_ha_reconnect_test non_ha_reconnect_test.cpp)
 add_store_test(nvme_kv_connector_config_test nvme_kv/connector_config_test.cpp)
+add_store_test(ha_cluster_namespace_config_test
+               ha_cluster_namespace_config_test.cpp)
 add_store_test(redis_connection_config_test redis_connection_config_test.cpp)
 add_store_test(nvme_kv_io_concurrency_config_test
                nvme_kv/io_concurrency_config_test.cpp)
@@ -284,6 +300,9 @@ add_store_test(object_storage_adapter_test object_storage_adapter_test.cpp)
 add_store_test(mutex_test mutex_test.cpp)
 add_store_test(file_storage_test file_storage_test.cpp)
 add_store_test(file_storage_config_test file_storage_config_test.cpp)
+add_store_test(fileread_worker_pool_config_test
+               fileread_worker_pool_config_test.cpp)
+add_store_test(fileread_worker_pool_test fileread_worker_pool_test.cpp)
 if(MOONCAKE_OSS_ADAPTER_ENABLED)
   target_compile_definitions(file_storage_test PRIVATE HAVE_OSS_ADAPTER)
 endif()

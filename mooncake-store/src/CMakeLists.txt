@@ -16,8 +16,10 @@ set(MOONCAKE_STORE_SHARED_SOURCES
 set(MOONCAKE_STORE_MASTER_SOURCES
     allocation_strategy.cpp
     allocator.cpp
+    config/ha_cluster_namespace_config.cpp
     config/local_file_snapshot_config.cpp
     config/redis_connection_config.cpp
+    config/s3_client_config.cpp
     segment_allocator_registration.cpp
     client_offboarding.cpp
     master_service.cpp
@@ -61,6 +63,7 @@ set(MOONCAKE_STORE_MASTER_SOURCES
     ha/snapshot/batch_oplog/batch_oplog_snapshot_publisher.cpp
     ha/snapshot/batch_oplog/batch_oplog_snapshot_coordinator.cpp
     ha/snapshot/batch_oplog/batch_oplog_snapshot_gc.cpp
+    ha/snapshot/batch_oplog/batch_oplog_pruning_coordinator.cpp
     ha/snapshot/snapshot_maintenance_lease.cpp
     ha/snapshot/master_snapshot_codec.cpp
     ha/snapshot/local_ssd_codec.cpp
@@ -105,6 +108,7 @@ set(MOONCAKE_STORE_CLIENT_SOURCES
     nvme_kv/key_conflict_policy.cpp
     nvme_kv/object_layout.cpp
     transfer_task.cpp
+    config/fileread_worker_pool_config.cpp
     posix_file.cpp
     client_buffer.cpp
     aligned_client_buffer.cpp
@@ -114,6 +118,7 @@ set(MOONCAKE_STORE_CLIENT_SOURCES
     dummy_client.cpp
     shm_helper.cpp
     file_storage.cpp
+    config/client_host_identity_config.cpp
     config/client_metric_config.cpp
     config/file_storage_config.cpp
     config/bucket_backend_config.cpp
