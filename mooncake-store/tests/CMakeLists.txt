@@ -87,6 +87,8 @@ add_store_test(master_service_weight_management_test
 add_store_test(master_service_group_test master_service_group_test.cpp)
 add_store_test(master_service_object_ref_test
                master_service_object_ref_test.cpp)
+add_store_test(master_service_tenant_iteration_test
+               master_service_tenant_iteration_test.cpp)
 add_ha_test(master_service_evict_scenario_test
             master_service_evict_scenario_test.cpp)
 target_link_libraries(master_service_evict_scenario_test
@@ -216,6 +218,7 @@ if(USE_TENT)
 endif()
 add_store_test(tenant_quota_test tenant_quota_test.cpp)
 add_store_test(tenant_quota_manager_test tenant_quota_manager_test.cpp)
+add_store_test(tenant_quota_policy_test tenant_quota_policy_test.cpp)
 add_store_test(tenant_quota_ledger_test tenant_quota_ledger_test.cpp)
 add_store_test(tenant_id_test tenant_id_test.cpp)
 add_store_test(object_part_test object_part_test.cpp)
